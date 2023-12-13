@@ -1,13 +1,13 @@
 'use client'
 
 import { useQuery } from "@tanstack/react-query"
-
-import { TApiResponse, TVenda } from "@/types"
-import { TabelaVendas } from "./components/TabelaVendas"
 import { useRouter } from "next/navigation"
-import { Api } from "../lib/axios"
-import { getPassword, getUser } from "../activeUser"
 import { useState } from "react"
+import { TApiResponse, TVenda } from "../../../types"
+import { getUser, getPassword } from "../../activeUser"
+import { Api } from "../../lib/axios"
+import { TabelaVendas } from "./components/TabelaVendas"
+
 
 export default function VendasPage() {
   const router = useRouter()

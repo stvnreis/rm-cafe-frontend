@@ -2,6 +2,7 @@ import { Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRo
 import { TProduto } from "@/types"
 import { EditIcon, Trash } from "lucide-react"
 import React from "react"
+import { brlMoney } from "@/helpers/money/brlMoney"
 
 const columns = [
   { name: "NOME", uid: "nome" },
@@ -44,7 +45,7 @@ export const TabelaProdutos = ({ produtos, isLoading, isPending, loadingMessage,
       case "valor":
         return (
           <div className="flex flex-col">
-            <p className="text-bold text-sm capitalize text-default-400">{produto.valor}</p>
+            <p className="text-bold text-sm capitalize text-default-400">{brlMoney(produto.valor)}</p>
           </div>
         );
       case "ações":

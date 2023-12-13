@@ -3,8 +3,6 @@
 import Link from "next/link"
 import { ShoppingBasket } from "lucide-react"
 import { Button } from "@nextui-org/react"
-import { getCookie, setCookie } from "cookies-next"
-import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { isLoggedIn, signOut } from "../app/activeUser"
 
@@ -14,28 +12,28 @@ export const Navbar = () => {
   const handleLogin = () => {
     if (isLoggedIn()) signOut()
 
-    router.push('auth')
+    router.push('/auth')
     router.refresh()
   }
 
-  return <div className="my-5 mx-5 p-5 flex items-center justify-between bg-primary text-zinc-300 rounded-full opacity-80">
-    <div className="flex">єcσмм cαƒє</div>
+  console.log(isLoggedIn())
+
+  return <div className="my-5 mx-5 p-5 flex items-center justify-around bg-primary text-zinc-300 rounded-full opacity-80">
+    <div className="flex">
+      <Link href='/produtos/menu'>
+        єcσмм cαƒє
+      </Link>
+    </div>
     <div className="flex items-center justify-center gap-5 font-bold">
-      <Link href='/produtos' className="hover:text-zinc-700 hover:opacity-80">
-        Produtos
-      </Link>
-      <Link href='/menu' className="hover:text-zinc-700 hover:opacity-80">
+      {/* <Link href='/menu' className="hover:text-zinc-700 hover:opacity-80">
         Cardápio
-      </Link>
-      <Link href='/vendas' className="hover:text-zinc-700 hover:opacity-80">
-        Vendas
-      </Link>
+      </Link> */}
     </div>
     <div className="flex justify-end items-center gap-10">
       <Link href='/cart'>
         <ShoppingBasket size={30} className="rounded-full hover:bg-zinc-700 hover:opacity-80" />
       </Link>
-      <Button onClick={() => handleLogin()}>{!isLoggedIn() ? 'Fazer Login' : 'Sair'}</Button>
+      <Button onClick={() => handleLogin()}>Autenticar</Button>
     </div>
   </div>
 }

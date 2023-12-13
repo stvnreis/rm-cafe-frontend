@@ -2,11 +2,9 @@ import { Button, Card, CardBody, CardHeader, Input } from "@nextui-org/react"
 import { ChangeEvent, FormEvent, useState } from "react"
 import { EyeSlashFilledIcon } from "./EyeSlashedFilledIcon"
 import { EyeFilledIcon } from "./EyeFilledIcon"
-import {getCookie, setCookie} from 'cookies-next'
 
 import { useRouter } from "next/navigation"
 import { useSnackbar } from "notistack"
-import axios from "axios"
 import { Api } from "../app/lib/axios"
 import { logIn } from "../app/activeUser"
 
@@ -51,7 +49,7 @@ export const LoginCard = () => {
 
       logIn(formData.user, formData.password, data.data.idFuncionario)
       
-      router.push('/')
+      router.push('/menu')
     } catch (err) {
       enqueueSnackbar('Usuário ou senha inválidos!', {variant: 'error', autoHideDuration: 2000})
     } finally {

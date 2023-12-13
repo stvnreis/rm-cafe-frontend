@@ -93,8 +93,8 @@ export default function ProdutoPage({ params: { id } }: { params: { id: number }
       <div className="w-fit h-fit">
         <Image
           src={data!.fotoUrl}
-          width={500}
-          height={500}
+          width={300}
+          height={300}
           alt="Imagem produto"
         />
       </div>

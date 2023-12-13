@@ -2,17 +2,45 @@
 
 import { Button } from "@nextui-org/react";
 import { Api } from "../lib/axios";
-import { getCookie } from "cookies-next";
+import { useSnackbar } from "notistack";
+import { useState } from "react";
 
 export default function AdminPage() {
-  const handleBackup = () => {
-    Api.get('api/backup', {
-      headers: {
-        user: getCookie('user') as string,
-        password: getCookie('password') as string
-      }
-    })
+  const { enqueueSnackbar } = useSnackbar()
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleBackup = async () => {
+    try {
+      setIsLoading(true)
+      enqueueSnackbar('Seu backup está sendo gerado!', {
+        autoHideDuration: 1000
+      })
+
+      const {data} = await Api.get('api/backup')
+
+      enqueueSnackbar(data.message, {
+        variant: 'success',
+        autoHideDuration: 2000
+      })
+    } catch (err: any) {
+      enqueueSnackbar(err.response.data.message, {
+        variant: 'error',
+        autoHideDuration: 2000
+      })
+    } finally {
+      setIsLoading(false)
+    }
+    
   }
 
-  return <Button onClick={() => handleBackup()}>Gerar Backup</Button>
+  return <div className="w-full flex justify-center">
+    <Button
+      color="primary"
+      className="opacity-80 text-white"
+      onClick={() => handleBackup()}
+      isDisabled={isLoading}
+    >
+      Gerar Backup
+    </Button>
+  </div>
 }

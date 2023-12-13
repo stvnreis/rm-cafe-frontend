@@ -19,7 +19,9 @@ export function isLoggedIn(): boolean {
   const password = getCookie('password') as string
   const idFuncionario = getCookie('idFuncionario') as string
 
-  return (user !== null && password !== null && idFuncionario !== null)
+  if (!user && !password) return false
+  
+  return true
 }
 
 export function getUser() {

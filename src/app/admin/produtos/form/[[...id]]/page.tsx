@@ -6,10 +6,11 @@ import { ProdutosForm } from "./components/ProdutosForm";
 import { ChangeEvent, useState } from "react";
 import { useSnackbar } from "notistack";
 import { Api } from "@/app/lib/axios";
-import router from "next/router";
+import { useRouter } from "next/navigation";
 import { getPassword, getUser } from "@/app/activeUser";
 
 export default function ProdutoFormPage({ params: { id } }: TProdutosForm) { 
+  const router = useRouter()
   const [produto, setProduto] = useState<TProduto>()
   const [isFetching, setIsFetching] = useState(false)
 
@@ -41,30 +42,15 @@ export default function ProdutoFormPage({ params: { id } }: TProdutosForm) {
   })
 
   const handleSubmit = async (values: TProduto) => {
-    const body = {
-      descricao: values.descricao,
-      valor: Number(values.valor),
-      idFornecedor: Number(values.idFornecedor),
-      quantidade: Number(values.quantidade)
-    }
-
-    const header = {
-      headers: {
-        "Content-Type": "Application/json",
-        user: getUser(),
-        password: getPassword(),
-      },
-    }
-
     try {
       setIsFetching(true)
       const { data } =
         hasId ?
-          await Api.patch(`api/produtos/${values.id}`, body, header) : await Api.post(`api/produtos`, body, header)
+          await Api.patch(`api/produtos/${values.id}`) : await Api.post(`api/produtos`)
       
       console.log(data)
 
-      hasId ? router.reload() : router.push(`/produtos/form/${data.data.id}`)
+      hasId ? router.refresh() : router.push(`/produtos/form/${data.data.id}`)
 
       enqueueSnackbar(data.message, {variant: 'success'})
     } catch (error) {
@@ -72,7 +58,6 @@ export default function ProdutoFormPage({ params: { id } }: TProdutosForm) {
     } finally {
       setIsFetching(false)
     }
-      
   }
 
   return <ProdutosForm

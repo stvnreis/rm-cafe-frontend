@@ -3,15 +3,14 @@
 import { getCookie } from "cookies-next"
 import { useQuery } from "@tanstack/react-query"
 import { TApiResponse, TProduto } from "@/types"
-import { TabelaProdutos } from "@/app/produtos/components/TabelaProdutos"
-import { Button, useDisclosure, user } from "@nextui-org/react"
+import { TabelaProdutos } from "@/app/admin/produtos/components/TabelaProdutos"
+import { Button } from "@nextui-org/react"
 import { PlusIcon } from "@/components/icons/PlusIcon"
 import { useRouter } from "next/navigation"
 import { useSnackbar } from "notistack"
-import { validaLogin } from "../validaLogin"
-import { Api } from "../lib/axios"
+import { Api } from "../../lib/axios"
 import { useState } from "react"
-import { getPassword, getUser } from "../activeUser"
+import { getPassword, getUser } from "../../activeUser"
 
 export default function Page() {
   const router = useRouter()
@@ -28,14 +27,9 @@ export default function Page() {
     retry: 0,
     queryFn: async () => {
       try {
-        const { data } = await Api.get('api/produtos', {
-          headers: {
-            user: getUser(),
-            password: getPassword()
-          }
-        })
+        const { data } = await Api.get<TApiResponse<TProduto[]>>('api/produtos')
 
-        return data as TApiResponse<TProduto[]>
+        return data
       } catch (err: any) {
         setTableMessage(err.response.data.message)
       }
