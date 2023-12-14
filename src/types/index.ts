@@ -16,6 +16,26 @@ export type TProduto = {
   eNovidade: boolean;
 }
 
+export type TProdutoCategoria = {
+  id: number;
+  dsCategoria: string;
+}
+
+export type TProdutoWithRelations = {
+  id: number;
+  fotoUrl: string;
+  descricao: string;
+  valor: number;
+  quantidade: number;
+  produtoFornecedor: {
+    id: number;
+    descricao: string;
+  };
+  produtoCategoria: TProdutoCategoria;
+  dhInclusao: Date;
+  eNovidade: boolean;
+}
+
 export type TVenda = {
   id: number;
   valorTotal: number;

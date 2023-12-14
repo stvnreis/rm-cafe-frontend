@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { TApiResponse, TVenda } from "../../../types"
 import { getUser, getPassword } from "../../activeUser"
-import { Api } from "../../lib/axios"
+import { Api } from "../../../lib/axios"
 import { TabelaVendas } from "./components/TabelaVendas"
 
 

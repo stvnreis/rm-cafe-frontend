@@ -1,17 +1,28 @@
+'use client'
+
 import { Button, Card, CardBody, CardHeader } from "@nextui-org/react"
 import Image from "next/image"
-import { TProduto } from "@/types";
+import { TProduto, TProdutoWithRelations } from "@/types";
 import { brlMoney } from "@/helpers/money/brlMoney";
 import Link from "next/link";
+import { enqueueSnackbar } from "notistack";
+import { addItemToCart } from "../activeCart";
+import { MouseEvent } from "react";
 
 type ProdutoCardProps = {
-  item: TProduto
-  handleClick: (e: any, produto: TProduto) => void
+  item: TProduto | TProdutoWithRelations
 }
 
-export const ProdutoCard = ({ item, handleClick }: ProdutoCardProps) => {
+export const ProdutoCard = ({ item }: ProdutoCardProps) => {
+  const handleClick = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>, produto: TProduto | TProdutoWithRelations) => {
+    e.preventDefault()
+    addItemToCart(produto)
+
+    enqueueSnackbar(`${produto.descricao} adicionado ao carrinho!`, {variant:'success', autoHideDuration: 2500})
+  }
+  
   return <Link href={`/produtos/${item.id}`}>
-  <Card isHoverable shadow="lg" className="h-[20rem] w-[15rem]">
+  <Card isHoverable shadow="lg" className="h-[20rem] w-[12rem] md:w-[15rem]">
     <CardHeader className="w-full h-1/2">
        <div className="w-full h-full relative">
           <Image
@@ -23,7 +34,7 @@ export const ProdutoCard = ({ item, handleClick }: ProdutoCardProps) => {
         </div>
     </CardHeader>
     <CardBody>
-        <div className="flex flex-col justify-center items-center w-full h-full">
+        <div className="flex flex-col justify-center items-center text-center w-full h-full">
           <label>{item.descricao}</label>
           <span className="text-sm">{brlMoney(item.valor)}/un</span>
           <Button

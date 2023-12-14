@@ -1,6 +1,7 @@
 'use client'
 
 import { getCookie, setCookie } from "cookies-next"
+import { clearCart } from "./activeCart"
 
 export function logIn(user: string, password: string, idFuncionario: number) {
   setCookie('user', user)
@@ -12,6 +13,8 @@ export function signOut() {
   setCookie('user', null)
   setCookie('password', null)
   setCookie('idFuncionario', null)
+
+  clearCart()
 }
 
 export function isLoggedIn(): boolean {

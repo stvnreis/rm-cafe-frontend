@@ -1,8 +1,14 @@
+'use client'
+
 import { Spinner, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip, User } from "@nextui-org/react"
 import { TProduto } from "@/types"
 import { EditIcon, Trash } from "lucide-react"
-import React from "react"
+import React, { ReactNode, useState } from "react"
 import { brlMoney } from "@/helpers/money/brlMoney"
+import { enqueueSnackbar } from "notistack"
+import { Api } from "../../../../lib/axios"
+import { getUser, getPassword } from "../../../activeUser"
+import Link from "next/link"
 
 const columns = [
   { name: "NOME", uid: "nome" },
@@ -13,17 +19,30 @@ const columns = [
 
 export type TabelaProdutosProps = {
   produtos?: TProduto[]
-  isLoading: boolean
-  isPending?: boolean
-  errorMessage: string
-  loadingMessage?: string
-  handleRouting: (id?: number) => void
-  onDelete: (id: number) => void
 }
 
-export const TabelaProdutos = ({ produtos, isLoading, isPending, loadingMessage, errorMessage, handleRouting, onDelete }: TabelaProdutosProps) => {
-  const renderCell = React.useCallback((produto: TProduto, columnKey: React.Key) => {
+export const TabelaProdutos = ({ produtos }: TabelaProdutosProps) => {
+  const [isPending, setIsPending] = useState(false)
+  const renderCell = React.useCallback((produto: TProduto, columnKey: React.Key): ReactNode => {
     const cellValue = produto[columnKey as keyof TProduto];
+
+    const handleDelete = async (id: number) => {
+      try {
+        setIsPending(true)
+        const { data } = await Api.delete(`/api/produtos/${id}`,{
+          headers: {
+            user: getUser(),
+            password: getPassword(),
+          }
+        })
+
+        enqueueSnackbar(data.message as string, { variant: 'success', autoHideDuration: 2000 })
+      } catch (err: any) {
+        enqueueSnackbar(err.response.data.message, {variant: 'error', autoHideDuration: 2000})
+      } finally {
+        setIsPending(false)
+      }
+    }
 
     switch (columnKey) {
       case "nome":
@@ -31,7 +50,7 @@ export const TabelaProdutos = ({ produtos, isLoading, isPending, loadingMessage,
           <User
             avatarProps={{radius: "lg", src: produto.fotoUrl ?? ''}}
             description={produto.descricao}
-            name={cellValue}
+            name={cellValue as ReactNode}
           >
             {produto.descricao}
           </User>
@@ -52,21 +71,21 @@ export const TabelaProdutos = ({ produtos, isLoading, isPending, loadingMessage,
         return (
           <div className="relative flex items-center gap-2">
             <Tooltip content="Editar produto">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                <EditIcon onClick={() => handleRouting(produto.id)} />
-              </span>
+              <Link className="text-lg text-default-400 cursor-pointer active:opacity-50" href={`/admin/produtos/form/${produto.id}`}>
+                <EditIcon />
+              </Link>
             </Tooltip>
             <Tooltip color="danger" content="Deletar produto">
               <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                <Trash onClick={() => onDelete(produto.id)} />
+                <Trash onClick={() => handleDelete(produto.id)} />
               </span>
             </Tooltip>
           </div>
         );
-      default:
-        return cellValue;
+      // default:
+      //   return cellValue;
     }
-  }, [handleRouting, onDelete]);
+  }, []);
 
   return <Table
     classNames={{
@@ -89,9 +108,8 @@ export const TabelaProdutos = ({ produtos, isLoading, isPending, loadingMessage,
     </TableHeader>
     <TableBody
       items={produtos ?? []}
-      isLoading={isLoading || isPending}
-      emptyContent={errorMessage}
-      loadingContent={<Spinner label={loadingMessage ?? 'Carregando...'} color="primary" />}
+      isLoading={isPending}
+      loadingContent={<Spinner label={'Carregando...'} color="primary" />}
     >
       {
         (produto) => (

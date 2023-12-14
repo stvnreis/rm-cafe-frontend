@@ -5,7 +5,7 @@ import { EyeFilledIcon } from "./EyeFilledIcon"
 
 import { useRouter } from "next/navigation"
 import { useSnackbar } from "notistack"
-import { Api } from "../app/lib/axios"
+import { Api } from "../lib/axios"
 import { logIn } from "../app/activeUser"
 
 export const LoginCard = () => {

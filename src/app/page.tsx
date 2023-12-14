@@ -1,59 +1,47 @@
-'use client'
+import { TApiResponse, TProdutoCategoria, TProdutoWithRelations } from "../types"
+import { Api } from "../lib/axios"
 
-import Link from "next/link";
+import { ProdutoSwiper } from "./components/produto-swiper/ProdutoSwiper"
 
-import { Button } from "@nextui-org/react";
-import { NextRequest, NextResponse } from "next/server";
-import { getCookie } from "cookies-next";
-import { redirect, useRouter } from "next/navigation";
+export default async function MenuPage() {
+  const { data } = await getProdutosWithRelations()
+  const getCategoriasResponse = await getCategorias()
 
-export default function Home() {
-  const login = {
-    user: getCookie('user'),
-    password: getCookie('password')
-  }
-  console.log(login)
+  const categorias = getCategoriasResponse.data;
+  const produtosNovidade = data.filter((produto) => produto.eNovidade)
 
-  if (!login) redirect('/auth')
-  
-  return (
-    <main className="mt-10 flex flex-col justify-center items-center gap-10">
-      <h1 className="font-bold">Pagina inicial</h1>
-      <div className="flex flex-col gap-2 items-center">
-        <Link
-          href="/produtos"
-          className="w-full"
-        >
-          <Button
-            color="primary"
-            className="w-full"
-          >
-            Cadastro de Produtos
-          </Button>
-        </Link>
-        <Link
-          href="/menu"
-          className="w-full"
-        >
-          <Button
-            color="primary"
-            className="w-full"
-          >
-            Cardápio
-          </Button>
-        </Link>
-        <Link
-          href="/vendas"
-          className="w-full"
-        >
-          <Button
-            color="primary"
-            className="w-full"
-          >
-            Listagem de Vendas
-          </Button>
-        </Link>
+  return <main className="w-full mt-10 p-10 gap-10 flex flex-col justify-between items-center bg-primary opacity-80 rounded-lg text-white">
+    {produtosNovidade.length && <div className="flex flex-col gap-5 items-center w-full">
+      <h1 className="text-xl font-bold">Confira todas as novidades:</h1>
+      <div className="w-full">
+        <ProdutoSwiper produtos={produtosNovidade} />
       </div>
-    </main>
-  )
+    </div>}
+    <div className="flex flex-col gap-10 w-full">
+      <>
+        {categorias.map((categoria) => {
+          const produtos = data.filter((produto) => produto.produtoCategoria.id === categoria.id)
+
+          return <div className="w-full" key={categoria.id}>
+            <h1 className="text-xl font-bold">{categoria.dsCategoria}</h1>
+            <div className="w-full mt-3">
+              <ProdutoSwiper produtos={produtos} key={`${categoria.dsCategoria}`} />
+            </div>
+          </div>
+        })}
+      </>
+    </div>
+  </main>
+}
+
+async function getCategorias(): Promise<TApiResponse<TProdutoCategoria[]>>{
+  const { data } = await Api.get<TApiResponse<TProdutoCategoria[]>>('api/categorias')
+  
+  return data
+}
+
+async function getProdutosWithRelations(): Promise<TApiResponse<TProdutoWithRelations[]>>{
+  const {data} = await Api.get<TApiResponse<TProdutoWithRelations[]>>('api/produtos-with-relations')
+ 
+  return data
 }

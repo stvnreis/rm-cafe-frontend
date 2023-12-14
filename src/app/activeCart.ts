@@ -1,15 +1,15 @@
 'use client'
 
-import { TProduto } from "../types";
+import { TProduto, TProdutoWithRelations } from "../types";
 
 export type cartItemsProps = {
-  produto: TProduto
+  produto: TProduto | TProdutoWithRelations
   quantidade: number
 }
 
 export let cartItems: cartItemsProps[] = []
 
-export const addItemToCart = (produto: TProduto, quantidade?: number): void => {
+export const addItemToCart = (produto: TProduto | TProdutoWithRelations, quantidade?: number): void => {
   const item = cartItems.find((itemInCart) => itemInCart.produto.id === produto.id)
   if (item) item.quantidade += quantidade ?? 1
   

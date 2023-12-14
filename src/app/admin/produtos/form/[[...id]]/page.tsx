@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ProdutosForm } from "./components/ProdutosForm";
 import { ChangeEvent, useState } from "react";
 import { useSnackbar } from "notistack";
-import { Api } from "@/app/lib/axios";
+import { Api } from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import { getPassword, getUser } from "@/app/activeUser";
 

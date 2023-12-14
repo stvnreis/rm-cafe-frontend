@@ -6,7 +6,7 @@ import { CartContainer } from "./components/CartContainer";
 import { TVendaProdutoPostRequest } from "@/types";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
-import { Api } from "../lib/axios";
+import { Api } from "../../lib/axios";
 import { getPassword, getUser } from "../activeUser";
 
 export default function CartPage() {  

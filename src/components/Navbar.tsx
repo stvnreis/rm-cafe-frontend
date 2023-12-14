@@ -20,7 +20,7 @@ export const Navbar = () => {
 
   return <div className="my-5 mx-5 p-5 flex items-center justify-around bg-primary text-zinc-300 rounded-full opacity-80">
     <div className="flex">
-      <Link href='/produtos/menu'>
+      <Link href='/'>
         єcσмм cαƒє
       </Link>
     </div>
