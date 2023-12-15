@@ -41,7 +41,11 @@ async function getCategorias(): Promise<TApiResponse<TProdutoCategoria[]>>{
 }
 
 async function getProdutosWithRelations(): Promise<TApiResponse<TProdutoWithRelations[]>>{
-  const {data} = await Api.get<TApiResponse<TProdutoWithRelations[]>>('api/produtos-with-relations')
+  const { data } = await Api.get<TApiResponse<TProdutoWithRelations[]>>('api/produtos', {
+    params: {
+      relations: true
+    }
+  })
  
   return data
 }
